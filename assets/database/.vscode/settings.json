@@ -1,0 +1,11 @@
+{
+  "files.associations": {
+    "type_traits": "cpp",
+    "limits": "cpp",
+    "ratio": "cpp",
+    "tuple": "cpp",
+    "variant": "cpp",
+    "__bit_reference": "cpp",
+    "bitset": "cpp"
+  }
+}
