@@ -1,5 +1,3 @@
-//#define WIN32
-
 //NORMAL LIBRARIES
 #include <stdio.h>
 #include <stdlib.h>
@@ -606,12 +604,12 @@ void InitPlayers(Player** player){
   userinfo = (all_players + 0);
   AstInGame = 0;
   //Opening files that will swap player games 
-  FILE *pfile = fopen("assets/user1.bin", "w+"); // Abre el archivo
+  FILE *pfile = fopen("assets/database/user1.bin", "w+"); // Abre el archivo
   if (pfile != NULL){
     fwrite(&AstInGame, sizeof(int), 1, pfile);
     fclose(pfile);
   }
-  FILE *pfile2 = fopen("assets/user2.bin", "w+"); // Abre el archivo
+  FILE *pfile2 = fopen("assets/database/user2.bin", "w+"); // Abre el archivo
   if (pfile != NULL){
     fwrite(&AstInGame, sizeof(int), 1, pfile);
     fclose(pfile);
@@ -1935,7 +1933,7 @@ int CheckPerimeter(float lado1x, float lado1y, float lado2x, float lado2y, float
     }
     int generation = 0;
     //Opens file that contains asteroids per round
-    FILE *pfile = fopen("assets/rounds.txt", "r+"); // Abre el archivo
+    FILE *pfile = fopen("assets/database/rounds.txt", "r+"); // Abre el archivo
     if (pfile != NULL){
       fseek(pfile, 0, SEEK_SET);
       int roundd = 0;
@@ -2629,7 +2627,7 @@ void InsertVNN(bool* duplicado){
   char *zErrMsg = 0;
   int rc;
    /* Open database */
-   rc = sqlite3_open("assets/usuarios.db", &db);
+   rc = sqlite3_open("assets/database/usuarios.db", &db);
    
    if( rc ) {
       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
@@ -2663,7 +2661,7 @@ void InsertData(bool duplicado, int infocounter){
   int rc;
   ResetString(sql, 200);
   /* Open database */
-  rc = sqlite3_open("assets/usuarios.db", &db);
+  rc = sqlite3_open("assets/database/usuarios.db", &db);
 
   if( rc ) {
       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
@@ -2725,7 +2723,7 @@ void GetUser(bool* duplicado){
   char *zErrMsg = 0;
   int rc;
 
-  rc = sqlite3_open("assets/usuarios.db", &db);
+  rc = sqlite3_open("assets/database/usuarios.db", &db);
   if (rc) {
     fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
   }else{
@@ -2791,7 +2789,7 @@ void InsertScore(){
   int rc;
   ResetString(sql, 200);
   /* Open database */
-  rc = sqlite3_open("assets/usuarios.db", &db);
+  rc = sqlite3_open("assets/database/usuarios.db", &db);
 
   if( rc ) {
       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
@@ -2822,7 +2820,7 @@ void SaveScore(){
     int rc;
 
     //Open database 
-    rc = sqlite3_open("assets/usuarios.db", &db);
+    rc = sqlite3_open("assets/database/usuarios.db", &db);
     if(rc){
       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
       return;
@@ -2890,7 +2888,7 @@ void SaveScore(){
       if(userinfo->plscore.number > atoi(userinfo->maxscore)){
         char* datetoday = (char*) calloc(9,sizeof(char)); //Format: MM/DD/YY
         CheckPointer(datetoday);
-        #ifdef WIN32
+        #ifdef _WIN32
         _strdate_s(datetoday,9); //Get today's date
         #endif
         snprintf(sql, sizeof(char) * 200,
@@ -2935,7 +2933,7 @@ void SwitchPlayerstats(Asteroid* asteroid, UFO* ufo){
   ufo->stage = 0;
   switch(user_index){
     case 1:{
-      FILE *pfile = fopen("assets/user1.bin", "w+b"); // Abre el archivo
+      FILE *pfile = fopen("assets/database/user1.bin", "w+b"); // Abre el archivo
       if (pfile != NULL){
         fwrite(&AstInGame, sizeof(int), 1, pfile);
         for(int i = 0; i < kNAsteroids; i++){
@@ -2958,7 +2956,7 @@ void SwitchPlayerstats(Asteroid* asteroid, UFO* ufo){
         }
         fclose(pfile);
       }
-      FILE *pfile2 = fopen("assets/user2.bin", "rb"); // Abre el archivo
+      FILE *pfile2 = fopen("assets/database/user2.bin", "rb"); // Abre el archivo
       if (pfile2 != NULL){
         fread(&AstInGame, sizeof(int), 1, pfile2);
         for(int i = 0; i < AstInGame; i++){
@@ -2980,7 +2978,7 @@ void SwitchPlayerstats(Asteroid* asteroid, UFO* ufo){
       break;
     }
     case 0:{
-      FILE *pfile = fopen("assets/user2.bin", "w+b"); // Abre el archivo
+      FILE *pfile = fopen("assets/database/user2.bin", "w+b"); // Abre el archivo
       if (pfile != NULL){
         fwrite(&AstInGame, sizeof(int), 1, pfile);
         for(int i = 0; i < kNAsteroids; i++){
@@ -3003,7 +3001,7 @@ void SwitchPlayerstats(Asteroid* asteroid, UFO* ufo){
         }
         fclose(pfile);
       }
-      FILE *pfile2 = fopen("assets/user1.bin", "rb"); // Abre el archivo
+      FILE *pfile2 = fopen("assets/database/user1.bin", "rb"); // Abre el archivo
       if (pfile2 != NULL){
         fread(&AstInGame, sizeof(int), 1, pfile2);
         for(int i = 0; i < AstInGame; i++){
@@ -3049,7 +3047,7 @@ void ShowScoreBoard(){
   sqlite3_stmt *stmt;
 
   //Open database and prepare SQL query for top 10 scores with offset
-  if (sqlite3_open("assets/usuarios.db", &db) != SQLITE_OK) {
+  if (sqlite3_open("assets/database/usuarios.db", &db) != SQLITE_OK) {
     fprintf(stderr, "No se pudo abrir la base de datos: %s\n", sqlite3_errmsg(db));
     return;
   }else{
